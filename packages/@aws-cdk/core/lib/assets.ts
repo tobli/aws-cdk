@@ -58,7 +58,7 @@ export interface DockerImageAssetSource {
   readonly dockerBuildTarget?: string;
 
   /**
-   * The path to the Dockerfile, relative to the directory.
+   * Path to the Dockerfile (relative to the directory).
    */
   readonly dockerFile: string;
 

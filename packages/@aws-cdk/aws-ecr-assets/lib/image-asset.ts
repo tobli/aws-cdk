@@ -41,7 +41,7 @@ export interface DockerImageAssetProps extends assets.CopyOptions {
   readonly target?: string;
 
   /**
-   * Path to the Dockerfile, relative to the directory.
+   * Path to the Dockerfile (relative to the directory).
    *
    * @default - 'Dockerfile'
    */
@@ -79,10 +79,11 @@ export class DockerImageAsset extends Construct implements assets.IAsset {
       throw new Error(`Cannot find image directory at ${dir}`);
     }
 
-    const file = props.file ? (path.isAbsolute(props.file) ? props.file : path.join(dir, props.file)) : props.file;
-
-    // validate a docker file exists
-    validateFile(dir, file);
+    // validate the docker file exists
+    const file = path.join(dir, props.file ? props.file : 'Dockerfile');
+    if (!fs.existsSync(file)) {
+      throw new Error(`Cannot find file at ${file}`);
+    }
 
     let exclude: string[] = props.exclude || [];
 
@@ -137,22 +138,4 @@ function validateBuildArgs(buildArgs?: { [key: string]: string }) {
       throw new Error(`Cannot use tokens in keys or values of "buildArgs" since they are needed before deployment`);
     }
   }
-}
-
-function validateFile(dir: string, file?: string) {
-
-  if (file) {
-
-    if (!fs.existsSync(file)) {
-      throw new Error(`Cannot find file at ${file}`);
-    }
-
-  } else {
-
-    if (!fs.existsSync(path.join(dir, 'Dockerfile'))) {
-      throw new Error(`No 'Dockerfile' found in ${dir}`);
-    }
-
-  }
-
 }

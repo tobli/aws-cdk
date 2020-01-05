@@ -108,9 +108,9 @@ export interface ContainerImageAssetMetadataEntry extends BaseAssetMetadataEntry
   readonly target?: string;
 
   /**
-   * Dockerfile to use
+   * Path to the Dockerfile (relative to the directory).
    */
-  readonly file?: string;
+  readonly file: string;
 
 }
 

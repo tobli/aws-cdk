@@ -6,7 +6,6 @@ import * as fs from 'fs';
 import { Test } from 'nodeunit';
 import * as path from 'path';
 import { DockerImageAsset } from '../lib';
-
 // tslint:disable:object-literal-key-quotes
 
 export = {
@@ -21,26 +20,7 @@ export = {
 
     // THEN
     const template = SynthUtils.synthesize(stack).template;
-    test.deepEqual(template.Parameters.AssetParameters1a17a141505ac69144931fe263d130f4612251caa4bbbdaf68a44ed0f405439cImageName1ADCADB3, {
-      Type: 'String',
-      Description: 'ECR repository name and tag for asset "1a17a141505ac69144931fe263d130f4612251caa4bbbdaf68a44ed0f405439c"'
-    });
 
-    test.done();
-  },
-
-  'test instantiating Asset Image - custom docker file'(test: Test) {
-    // GIVEN
-    const stack = new Stack();
-
-    // WHEN
-    new DockerImageAsset(stack, 'Image', {
-      directory: path.join(__dirname, 'demo-image-custom-dockerfile'),
-      file: 'CustomDockerfile'
-    });
-
-    // THEN
-    const template = SynthUtils.synthesize(stack).template;
     test.deepEqual(template.Parameters.AssetParameters1a17a141505ac69144931fe263d130f4612251caa4bbbdaf68a44ed0f405439cImageName1ADCADB3, {
       Type: 'String',
       Description: 'ECR repository name and tag for asset "1a17a141505ac69144931fe263d130f4612251caa4bbbdaf68a44ed0f405439c"'
@@ -104,6 +84,23 @@ export = {
     // THEN
     const assetMetadata = stack.node.metadata.find(({ type }) => type === ASSET_METADATA);
     test.deepEqual(assetMetadata && assetMetadata.data.target, 'a-target');
+    test.done();
+  },
+
+  'with file'(test: Test) {
+    // GIVEN
+    const stack = new Stack();
+
+    const directoryPath = path.join(__dirname, 'demo-image-custom-docker-file');
+    // WHEN
+    new DockerImageAsset(stack, 'Image', {
+      directory: directoryPath,
+      file: 'Dockerfile.Custom'
+    });
+
+    // THEN
+    const assetMetadata = stack.node.metadata.find(({ type }) => type === ASSET_METADATA);
+    test.deepEqual(assetMetadata && assetMetadata.data.file, path.join(directoryPath, 'Dockerfile.Custom'));
     test.done();
   },
 
@@ -231,7 +228,7 @@ export = {
       new DockerImageAsset(stack, 'Asset', {
         directory: __dirname
       });
-    }, /No 'Dockerfile' found in/);
+    }, /Cannot find file at/);
     test.done();
   },
 

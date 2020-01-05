@@ -52,7 +52,8 @@ export = {
     stack.addDockerImageAsset({
       sourceHash: 'source-hash',
       directoryName: 'directory-name',
-      repositoryName: 'repository-name'
+      repositoryName: 'repository-name',
+      dockerFile: 'docker-file'
     });
 
     // THEN
