@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import { Test } from 'nodeunit';
 import * as path from 'path';
 import { DockerImageAsset } from '../lib';
+
 // tslint:disable:object-literal-key-quotes
 
 export = {
@@ -20,7 +21,6 @@ export = {
 
     // THEN
     const template = SynthUtils.synthesize(stack).template;
-
     test.deepEqual(template.Parameters.AssetParameters1a17a141505ac69144931fe263d130f4612251caa4bbbdaf68a44ed0f405439cImageName1ADCADB3, {
       Type: 'String',
       Description: 'ECR repository name and tag for asset "1a17a141505ac69144931fe263d130f4612251caa4bbbdaf68a44ed0f405439c"'
