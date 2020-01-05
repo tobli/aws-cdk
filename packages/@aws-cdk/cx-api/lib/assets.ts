@@ -106,6 +106,12 @@ export interface ContainerImageAssetMetadataEntry extends BaseAssetMetadataEntry
    * @default no build target
    */
   readonly target?: string;
+
+  /**
+   * Dockerfile to use
+   */
+  readonly file?: string;
+
 }
 
 export type AssetMetadataEntry = FileAssetMetadataEntry | ContainerImageAssetMetadataEntry;

@@ -44,6 +44,7 @@ export async function prepareContainerAsset(assemblyDir: string,
   debug(' 👑  Preparing Docker image asset:', contextPath);
 
   try {
+
     const ecr = await toolkitInfo.prepareEcrRepository(asset);
     const latest = `${ecr.repositoryUri}:latest`;
 
@@ -72,6 +73,10 @@ export async function prepareContainerAsset(assemblyDir: string,
 
     if (asset.target) {
       baseCommand.push('--target', asset.target);
+    }
+
+    if (asset.file) {
+      baseCommand.push('--file', asset.file);
     }
 
     const command = ci

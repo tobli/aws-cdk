@@ -58,6 +58,11 @@ export interface DockerImageAssetSource {
   readonly dockerBuildTarget?: string;
 
   /**
+   * The path to the Dockerfile, relative to the directory.
+   */
+  readonly dockerFile: string;
+
+  /**
    * ECR repository name
    *
    * Specify this property if you need to statically address the image, e.g.

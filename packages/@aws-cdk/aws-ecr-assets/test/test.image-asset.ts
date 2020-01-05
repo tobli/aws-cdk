@@ -29,6 +29,26 @@ export = {
     test.done();
   },
 
+  'test instantiating Asset Image - custom docker file'(test: Test) {
+    // GIVEN
+    const stack = new Stack();
+
+    // WHEN
+    new DockerImageAsset(stack, 'Image', {
+      directory: path.join(__dirname, 'demo-image-custom-dockerfile'),
+      file: 'CustomDockerfile'
+    });
+
+    // THEN
+    const template = SynthUtils.synthesize(stack).template;
+    test.deepEqual(template.Parameters.AssetParameters1a17a141505ac69144931fe263d130f4612251caa4bbbdaf68a44ed0f405439cImageName1ADCADB3, {
+      Type: 'String',
+      Description: 'ECR repository name and tag for asset "1a17a141505ac69144931fe263d130f4612251caa4bbbdaf68a44ed0f405439c"'
+    });
+
+    test.done();
+  },
+
   'repository name is derived from node unique id'(test: Test) {
     // GIVEN
     const stack = new Stack();
@@ -212,6 +232,20 @@ export = {
         directory: __dirname
       });
     }, /No 'Dockerfile' found in/);
+    test.done();
+  },
+
+  'fails if the file does not exist'(test: Test) {
+    // GIVEN
+    const stack = new Stack();
+
+    // THEN
+    test.throws(() => {
+      new DockerImageAsset(stack, 'Asset', {
+        directory: __dirname,
+        file: 'doesnt-exist'
+      });
+    }, /Cannot find file at/);
     test.done();
   },
 
