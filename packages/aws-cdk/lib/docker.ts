@@ -44,7 +44,6 @@ export async function prepareContainerAsset(assemblyDir: string,
   debug(' 👑  Preparing Docker image asset:', contextPath);
 
   try {
-
     const ecr = await toolkitInfo.prepareEcrRepository(asset);
     const latest = `${ecr.repositoryUri}:latest`;
 
