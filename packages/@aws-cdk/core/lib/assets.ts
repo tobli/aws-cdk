@@ -59,8 +59,10 @@ export interface DockerImageAssetSource {
 
   /**
    * Path to the Dockerfile (relative to the directory).
+   *
+   * @default - no file
    */
-  readonly dockerFile: string;
+  readonly dockerFile?: string;
 
   /**
    * ECR repository name

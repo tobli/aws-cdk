@@ -80,7 +80,7 @@ export class DockerImageAsset extends Construct implements assets.IAsset {
     }
 
     // validate the docker file exists
-    const file = path.join(dir, props.file ? props.file : 'Dockerfile');
+    const file = path.join(dir, props.file || 'Dockerfile');
     if (!fs.existsSync(file)) {
       throw new Error(`Cannot find file at ${file}`);
     }
