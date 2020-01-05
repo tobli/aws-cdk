@@ -39,6 +39,13 @@ export interface DockerImageAssetProps extends assets.CopyOptions {
    * @default - no target
    */
   readonly target?: string;
+
+  /**
+   * The path to the Dockerfile, relative to the directory.
+   *
+   * @default - ./Dockerfile
+   */
+  readonly file?: string;
 }
 
 /**
@@ -71,9 +78,11 @@ export class DockerImageAsset extends Construct implements assets.IAsset {
     if (!fs.existsSync(dir)) {
       throw new Error(`Cannot find image directory at ${dir}`);
     }
-    if (!fs.existsSync(path.join(dir, 'Dockerfile'))) {
-      throw new Error(`No 'Dockerfile' found in ${dir}`);
-    }
+
+    const file = props.file ? (path.isAbsolute(props.file) ? props.file : path.join(dir, props.file)) : props.file;
+
+    // validate a docker file exists
+    validateFile(dir, file);
 
     let exclude: string[] = props.exclude || [];
 
@@ -96,6 +105,7 @@ export class DockerImageAsset extends Construct implements assets.IAsset {
       directoryName: staging.stagedPath,
       dockerBuildArgs: props.buildArgs,
       dockerBuildTarget: props.target,
+      dockerFile: file,
       repositoryName: props.repositoryName || `cdk/${this.node.uniqueId.replace(/[:/]/g, '-').toLowerCase()}`,
       sourceHash: staging.sourceHash
     });
@@ -127,4 +137,22 @@ function validateBuildArgs(buildArgs?: { [key: string]: string }) {
       throw new Error(`Cannot use tokens in keys or values of "buildArgs" since they are needed before deployment`);
     }
   }
+}
+
+function validateFile(dir: string, file?: string) {
+
+  if (file) {
+
+    if (!fs.existsSync(file)) {
+      throw new Error(`Cannot find file at ${file}`);
+    }
+
+  } else {
+
+    if (!fs.existsSync(path.join(dir, 'Dockerfile'))) {
+      throw new Error(`No 'Dockerfile' found in ${dir}`);
+    }
+
+  }
+
 }
