@@ -124,6 +124,21 @@ export = {
       test.done();
     },
 
+    'does not allow passing a string ending with / for the bucketKey property'(test: Test) {
+      const stack = new Stack();
+
+      test.throws(() => {
+        new cpactions.S3SourceAction({
+          actionName: 'Source',
+          bucket: new s3.Bucket(stack, 'MyBucket'),
+          bucketKey: '/',
+          output: new codepipeline.Artifact(),
+        });
+      }, /Property bucketKey cannot end with \//);
+
+      test.done();
+    },
+
     'allows using the same bucket with events trigger mutliple times with different bucket paths'(test: Test) {
       const stack = new Stack();
 

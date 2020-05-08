@@ -96,6 +96,10 @@ export class S3SourceAction extends Action {
       throw new Error('Property bucketKey cannot be an empty string');
     }
 
+    if (props.bucketKey.endsWith('/')) {
+      throw new Error('Property bucketKey cannot end with /');
+    }
+
     this.props = props;
   }
 
